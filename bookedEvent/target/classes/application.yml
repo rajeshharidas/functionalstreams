@@ -1,0 +1,23 @@
+spring:
+  application.name: bookedingdemo
+  cloud.function.definition: bookingProcess;
+
+spring.cloud.stream:
+  bindings:
+    bookingProcess-in-0.destination: bookingdemo.bookingProcess
+
+  kafka.streams:
+    bindings:
+      bookingProcess-in-0.consumer.configuration.application.id: ${spring.application.name}-bookingProcess
+    binder:
+      brokers: localhost:9092
+      auto-add-partitions: true
+      min-partition-count: 6
+      configuration:
+        application.id: ${spring.application.name}
+        application.server: localhost:${server.port} 
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$UUIDSerde
+        default.value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        commit.interval.ms: 1000
+        auto.offset.reset: latest
+logging.level.com.bookedevents.streams.demo: debug
